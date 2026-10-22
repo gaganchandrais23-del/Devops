@@ -1,0 +1,20 @@
+#include <tunables/global>
+
+profile flask-apparmor-demo flags=(attach_disconnected) {
+  #include <abstractions/base>
+
+  network,
+  capability,
+
+  /usr/local/bin/python r,
+  /usr/local/bin/python3* r,
+  /usr/local/lib/python3.9/** r,
+  /usr/local/lib/python3.9/site-packages/** r,
+  /usr/lib/** r,
+  /lib/** r,
+  /app/** r,
+  /tmp/** rw,
+
+  deny /restricted-test.txt w,
+  deny /etc/shadow r,
+}
