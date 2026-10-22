@@ -13,7 +13,7 @@ Build a Docker-based monitoring system for a simulated quick-commerce applicatio
 - Jenkins Pipeline
 
 ## Project Structure
-```text
+
 Exercise-6-Grafana-Monitoring-Fresh/
 ├── Dockerfile
 ├── Jenkinsfile
@@ -31,7 +31,7 @@ Exercise-6-Grafana-Monitoring-Fresh/
         │   └── dashboard.yml
         └── datasources/
             └── prometheus.yml
-```
+
 
 ## Application Features
 - Simulates quick-commerce delivery activity.
@@ -52,24 +52,24 @@ Exercise-6-Grafana-Monitoring-Fresh/
 ## Docker Setup
 
 ### 1. Build the application
-```bash
+
 docker compose build
-```
+
 
 ### 2. Start the services
-```bash
+
 docker compose up -d
-```
+
 
 ### 3. Check container status
-```bash
+
 docker compose ps
-```
+
 
 ### 4. View logs
-```bash
+
 docker compose logs
-```
+
 
 ## Application Endpoints
 | Service | URL |
@@ -82,4 +82,54 @@ docker compose logs
 | Grafana Dashboard | http://localhost:3001 |
 
 ## Grafana Login
-The
+The initial credentials configured in Docker Compose are:
+
+- **Username:** `admin`
+- **Password:** `admin`
+
+Change the default password when prompted or before using the setup beyond local testing.
+
+## Grafana Dashboard
+The dashboard is named **Quick Commerce Real-Time Monitoring** and contains four panels:
+
+1. Total Completed Deliveries
+2. Active Orders
+3. Delivery Time (Seconds)
+4. Failed Deliveries
+
+The dashboard refreshes automatically every five seconds.
+
+## Prometheus Alert Rules
+The project includes alert rules for:
+- `QuickCommerceAppDown` — detects when the application cannot be scraped.
+- `HighDeliveryTime` — detects simulated delivery time above 900 seconds.
+- `HighActiveOrders` — detects active orders above 25.
+
+## Jenkins Pipeline
+The `Jenkinsfile` defines these stages:
+
+1. Checkout
+2. Validate Python
+3. Validate Configuration Files
+4. Build Docker Image
+
+The pipeline requires a configured Jenkins agent with Python 3, PyYAML, and Docker access. Pipeline execution must be verified separately in that environment.
+
+## Validation and Results
+- The application endpoint returned application information.
+- The health endpoint returned a healthy status.
+- The metrics endpoint exposed delivery metrics.
+- Prometheus successfully collected delivery metrics.
+- The Grafana dashboard displayed all four metric panels.
+
+The metrics are simulated for demonstration purposes and do not represent real customer or delivery-service data.
+
+## Stop the Services
+
+docker compose down
+
+
+This stops and removes the Compose containers while preserving the named Grafana data volume.
+
+## Conclusion
+This exercise demonstrates how Docker, Prometheus, and Grafana can be integrated to monitor a simulated quick-commerce application. It also introduces configuration validation and Docker image building through a Jenkins pipeline.
