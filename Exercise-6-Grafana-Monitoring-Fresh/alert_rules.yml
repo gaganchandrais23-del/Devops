@@ -1,0 +1,29 @@
+groups:
+  - name: quick-commerce-alerts
+    rules:
+      - alert: QuickCommerceAppDown
+        expr: up{job="quick-commerce"} == 0
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Quick-commerce application is down"
+          description: "Prometheus cannot scrape the quick-commerce application."
+
+      - alert: HighDeliveryTime
+        expr: quickcommerce_delivery_time_seconds > 900
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High delivery time detected"
+          description: "The simulated delivery time is above 15 minutes."
+
+      - alert: HighActiveOrders
+        expr: quickcommerce_active_orders > 25
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High number of active orders"
+          description: "The number of active orders is above 25."

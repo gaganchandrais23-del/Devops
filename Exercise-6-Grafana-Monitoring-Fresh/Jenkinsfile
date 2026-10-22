@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Source code is available in the workspace.'
+            }
+        }
+
+        stage('Validate Python') {
+            steps {
+                sh 'python3 -m py_compile delivery_metrics.py'
+            }
+        }
+
+        stage('Validate Configuration Files') {
+            steps {
+                sh 'python3 -m json.tool grafana/dashboards/quick-commerce.json > /dev/null'
+                sh 'python3 -c "import yaml; yaml.safe_load(open(\"compose.yaml\"))"'
+                sh 'python3 -c "import yaml; yaml.safe_load(open(\"prometheus.yml\"))"'
+                sh 'python3 -c "import yaml; yaml.safe_load(open(\"alert_rules.yml\"))"'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t quick-commerce-app:ci .'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'All validation stages and the Docker build completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the stage logs for details.'
+        }
+    }
+}
